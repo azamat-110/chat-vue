@@ -12,9 +12,7 @@ const defineProps = defineProps({
 	},
 })
 
-if (defineProps.user.messageInput) {
-	console.log('user.messageInput: ', defineProps.user.messageInput)
-}
+// const user.messageInput = defineModel()
 const showModal = ref(false)
 const photoButton = new URL('@/assets/images/photoButton.png', import.meta.url)
 const sendButton = new URL('@/assets/images/sendButton.png', import.meta.url)
@@ -27,25 +25,34 @@ function toggleModal() {
 }
 
 function sendCurrentMessage() {
-	return defineProps.user.messageInput
-		? dataStore.sendMessage(defineProps.user.id)
+	defineProps.user.messageInput
+		? dataStore.sendMessage(defineProps.user.id, defineProps.user.messageInput)
 		: toggleModal(defineProps.user.id)
+	defineProps.user.messageInput = ''
+}
+let timeout
+function input() {
+	if (timeout) {
+		clearTimeout(timeout)
+		timeout = undefined
+	}
+	const find = dataStore.users.find(a => a.id != defineProps.user.id)
+	if (!find) return
+	if (!find.isTyping) dataStore.updateTypingStatus(find.id, true)
+	timeout = setTimeout(() => {
+		dataStore.updateTypingStatus(find.id, false)
+	}, 2_000)
 }
 </script>
 
 <template>
 	<div class="chat-screen">
-		<SendImageModal
-			v-if="showModal"
-			@toggleModal="toggleModal"
-			:userId="user.id"
-		/>
 		<header class="header">
 			<img :src="user.avatar" alt="person avatar" class="avatar" />
 			<div class="userinfo">
 				<h1 class="username">{{ user.name }}</h1>
 				<p class="status">
-					{{ false ? 'typing...' : 'online' }}
+					{{ user.isTyping ? 'Печатает...' : 'Онлайн' }}
 				</p>
 			</div>
 		</header>
@@ -57,13 +64,17 @@ function sendCurrentMessage() {
 				:userId="user.id"
 			/>
 		</div>
-		<form class="footer" @submit.prevent="sendCurrentMessage()">
+
+		<form class="footer" @submit.prevent="sendCurrentMessage">
 			<input
 				type="text"
 				class="message-input"
+				id="messageInput"
 				placeholder="Написать сообщение..."
 				v-model="user.messageInput"
+				@input="input"
 			/>
+
 			<button class="send-button" type="submit">
 				<img
 					:src="user.messageInput ? sendButton : photoButton"
@@ -71,6 +82,11 @@ function sendCurrentMessage() {
 					class="send-icon"
 				/>
 			</button>
+			<SendImageModal
+				v-if="showModal"
+				@toggleModal="toggleModal"
+				:userId="user.id"
+			/>
 		</form>
 	</div>
 </template>

@@ -1,5 +1,5 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { reactive, ref } from 'vue'
 
 export const useDataStore = defineStore('data', () => {
 	let currentUserId = ref(null)
@@ -19,24 +19,24 @@ export const useDataStore = defineStore('data', () => {
 		},
 	])
 
-	const users = [
+	const users = reactive([
 		{
 			id: 0,
 			name: 'Александр',
 			avatar: 'public/images/alexAvatar.png',
-			messageInput: '',
 			isTyping: false,
+			messageInput: '',
 		},
 		{
 			id: 1,
 			name: 'Евгений',
 			avatar: 'public/images/evgenyAvatar.png',
+			isTyping: false,
 			messageInput: '',
-			isTyping: true,
 		},
-	]
+	])
 
-	function sendMessage(userId, imgUrl = '', comment = '') {
+	function sendMessage(userId, messageInput, imgUrl = '', comment = '') {
 		const hours =
 			new Date().getHours() < 10
 				? '0' + new Date().getHours()
@@ -47,23 +47,20 @@ export const useDataStore = defineStore('data', () => {
 				? '0' + new Date().getMinutes()
 				: new Date().getMinutes()
 
-		const user = users[userId]
-
 		const newMessage = {
 			id: messages.value.length + 1,
 			userId: userId,
-			messageText: comment || user.messageInput,
+			messageText: comment || users[userId].messageInput,
 			messageTime: hours + ':' + minutes,
 			imgUrl: imgUrl || '',
 		}
 		messages.value.push(newMessage)
-		user.messageInput = ''
 	}
 
 	function updateTypingStatus(userId, isTyping) {
-		if (users[userId]) {
-			users[userId].isTyping = isTyping
-		}
+		const find = users.find(a => a.id == userId)
+		if (!find) return
+		find.isTyping = isTyping
 	}
 
 	return {
