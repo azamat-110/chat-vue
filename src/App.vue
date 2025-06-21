@@ -8,4 +8,4 @@ import MainPage from '@/pages/MainPage.vue'
 	</div>
 </template>
 
-<style scoped></style>
+<style></style>

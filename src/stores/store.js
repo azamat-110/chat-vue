@@ -1,65 +1,76 @@
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useDataStore = defineStore('data', () => {
-	const photoButton = new URL(
-		'@/assets/images/photoButton.png',
-		import.meta.url
-	)
-	const sendButton = new URL('@/assets/images/sendButton.png', import.meta.url)
-	const showModal = ref(false)
-	let currentUserId = ref(0)
+	let currentUserId = ref(null)
 
 	const messages = ref([
 		{
+			id: 0,
+			userId: 0,
+			messageText: 'Привет, как дела?',
+			messageTime: '00:00',
+		},
+		{
 			id: 1,
 			userId: 1,
-			messageText: 'Привет, как дела?',
-			messageTime: new Date().getHours() + ':' + new Date().getMinutes(),
+			messageText: 'Хорошо, а у тебя?',
+			messageTime: '00:01',
 		},
 	])
 
-	const users = {
-		1: {
-			id: 1,
+	const users = [
+		{
+			id: 0,
 			name: 'Александр',
 			avatar: 'public/images/alexAvatar.png',
 			messageInput: '',
+			isTyping: false,
 		},
-		2: {
-			id: 2,
+		{
+			id: 1,
 			name: 'Евгений',
 			avatar: 'public/images/evgenyAvatar.png',
 			messageInput: '',
+			isTyping: true,
 		},
-	}
+	]
 
-	function sendMessage(userId) {
+	function sendMessage(userId, imgUrl = '', comment = '') {
+		const hours =
+			new Date().getHours() < 10
+				? '0' + new Date().getHours()
+				: new Date().getHours()
+
+		const minutes =
+			new Date().getMinutes() < 10
+				? '0' + new Date().getMinutes()
+				: new Date().getMinutes()
+
 		const user = users[userId]
+
 		const newMessage = {
 			id: messages.value.length + 1,
 			userId: userId,
-			messageText: user.messageInput,
-			messageTime: new Date().getHours() + ':' + new Date().getMinutes(),
-			// imgUrl: imgUrl || '',
+			messageText: comment || user.messageInput,
+			messageTime: hours + ':' + minutes,
+			imgUrl: imgUrl || '',
 		}
 		messages.value.push(newMessage)
 		user.messageInput = ''
 	}
 
-	function toggleModal(id) {
-		showModal.value = !showModal.value
-		currentUserId.value = id
+	function updateTypingStatus(userId, isTyping) {
+		if (users[userId]) {
+			users[userId].isTyping = isTyping
+		}
 	}
 
 	return {
 		users,
-		photoButton,
-		sendButton,
 		messages,
 		sendMessage,
-		toggleModal,
-		showModal,
+		updateTypingStatus,
 		currentUserId,
 	}
 })

@@ -5,8 +5,7 @@
 }
 .message-text {
 	max-width: 302px;
-	border-radius: 15px 15px 15px 0;
-	padding: 5px 10px;
+	// padding: 5px 10px;
 	font-family: 'Roboto';
 	font-weight: 400;
 	font-size: 16px;
@@ -15,14 +14,19 @@
 	& img {
 		max-width: 100%;
 		border-radius: 15px;
-		padding-bottom: 5px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		padding: 2px 2px 0 2px;
 	}
 }
-.message-text-img {
-	padding: 2px;
+
+.without-img {
+	padding: 5px 10px;
+}
+
+.with-img {
+	padding: 5px 0px 6px 5px;
 }
 
 .message-time {
@@ -34,12 +38,14 @@
 
 .income-message {
 	background: #c4bfff;
-}
-
-.end {
-	justify-content: end;
+	border-radius: 15px 15px 15px 0;
 }
 
 .outcome-message {
 	background: #d0dcff;
+	border-radius: 15px 15px 0 15px;
+}
+
+.end {
+	justify-content: end;
 }

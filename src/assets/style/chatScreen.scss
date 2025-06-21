@@ -3,7 +3,7 @@
 	flex-direction: column;
 	width: 400px;
 	height: 800px;
-	background: #f2f7ff;
+	background: #3f3f40;
 	background-image: url('@/assets/images/chatBackground.png');
 	background-size: cover;
 	border-radius: 10px;
@@ -50,6 +50,7 @@
 	padding: 11px 10px;
 	overflow: auto;
 	scrollbar-width: none;
+	overflow-y: scroll;
 }
 
 .footer {

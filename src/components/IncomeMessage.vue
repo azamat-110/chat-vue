@@ -23,7 +23,9 @@ const defineProps = defineProps({
 			"
 		>
 			<img v-if="messageData.imgUrl" :src="messageData.imgUrl" alt="img" />
-			{{ messageData.messageText }}
+			<p :class="messageData.imgUrl ? 'with-img' : 'without-img'">
+				{{ messageData.messageText }}
+			</p>
 		</div>
 		<div v-if="messageData.userId !== userId" class="message-time">
 			{{ messageData.messageTime }}
@@ -31,4 +33,4 @@ const defineProps = defineProps({
 	</div>
 </template>
 
-<style scoped src="@/assets/style/incomeMessage.scss"></style>
+<style></style>

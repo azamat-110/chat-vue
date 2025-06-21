@@ -1,3 +1,8 @@
+@import './style/chatScreen.scss';
+@import './style/incomeMessage.scss';
+@import './style/mainPage.scss';
+@import './style/sendImageModal.scss';
+
 * {
 	max-width: 1920px;
 	margin: 0;
